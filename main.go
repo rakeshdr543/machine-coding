@@ -7,25 +7,25 @@ import (
 )
 
 func main() {
+	lowerPriceSelectionStrategy := foodkart.LowerPriceSelectionStrategy{}
+	foodkartApp := foodkart.NewPlatform(lowerPriceSelectionStrategy)
 
-	foodkartApp := foodkart.NewPlatform()
-
-	err := foodkartApp.AddRestaurant(
-		"Restaurant1",
-		[]foodkart.ItemDetails{
-			{Name: "Pizza", Price: 10},
-			{Name: "Burger", Price: 5},
-		}, 20)
+	// add restaurant
+	err := foodkartApp.AddRestaurant("Restaurant1", map[string]int{
+		"Pizza":  10,
+		"Burger": 5,
+	}, 20)
 
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	err = foodkartApp.AddRestaurant("Restaurant2", []foodkart.ItemDetails{
-		{Name: "Pizza", Price: 15},
-		{Name: "Burger", Price: 7},
-	}, 30)
+	err = foodkartApp.AddRestaurant("Restaurant2", map[string]int{
+		"Pizza":  5,
+		"Burger": 10,
+	}, 20)
+
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -35,9 +35,9 @@ func main() {
 
 	err = foodkartApp.UpdateRestaurantMenu(
 		"Restaurant1",
-		[]foodkart.ItemDetails{
-			{Name: "Pizza", Price: 3},
-			{Name: "Burger", Price: 4},
+		map[string]int{
+			"Pizza":  3,
+			"Burger": 5,
 		})
 	if err != nil {
 		fmt.Println(err)
@@ -45,13 +45,9 @@ func main() {
 	}
 
 	// place order
-	order, err := foodkartApp.PlaceOrder("rakeshdr", []foodkart.OrderItem{
-		{
-			Name: "Pizza", Quantity: 6,
-		},
-		{
-			Name: "Burger", Quantity: 2,
-		},
+	order, err := foodkartApp.PlaceOrder("rakeshdr", map[string]int{
+		"Pizza":  2,
+		"Burger": 3,
 	})
 
 	if err != nil {

@@ -1,13 +1,8 @@
 package foodkart
 
-type OrderItem struct {
-	Name     string
-	Quantity int
-}
-
 type OrderDetails struct {
 	restaurant *Restaurant
-	items      []OrderItem
+	items      map[string]int
 }
 
 type Order struct {
