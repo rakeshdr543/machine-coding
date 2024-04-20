@@ -2,66 +2,51 @@ package main
 
 import (
 	"fmt"
+	"time"
 
-	foodkart "github.com/rakeshdr543/machine_coding/foodkart"
+	tracker "github.com/rakeshdr543/machine_coding/pandemic_tracker"
 )
 
 func main() {
-	lowerPriceSelectionStrategy := foodkart.LowerPriceSelectionStrategy{}
-	foodkartApp := foodkart.NewPlatform(lowerPriceSelectionStrategy)
 
-	// add restaurant
-	err := foodkartApp.AddRestaurant("Restaurant1", map[string]int{
-		"Pizza":  10,
-		"Burger": 5,
-	}, 20)
+	pandemicTracker := tracker.NewTracker()
 
+	name1, name2, name3 := "john", "bob", "Rock"
+
+	pandemicTracker.RegisterUser(name1, 897897987, 560056)
+	pandemicTracker.RegisterUser(name2, 89789765567, 560056)
+
+	pandemicTracker.RegisterUser(name3, 656656567, 560055)
+
+	assessRes1, err := pandemicTracker.SelfAssessment(name2, []string{"Cough", "Fever"}, true, true)
 	if err != nil {
-		fmt.Println(err)
-		return
+		fmt.Printf("error occurred %s\n", err.Error())
 	}
 
-	err = foodkartApp.AddRestaurant("Restaurant2", map[string]int{
-		"Pizza":  5,
-		"Burger": 10,
-	}, 20)
+	fmt.Printf("Assessment result for %s is %d\n", name2, assessRes1)
 
+	assessRes2, err := pandemicTracker.SelfAssessment(name1, []string{}, false, false)
 	if err != nil {
-		fmt.Println(err)
-		return
+		fmt.Printf("error occurred %s\n", err.Error())
 	}
+	fmt.Printf("Assessment result for %s is %d\n", name1, assessRes2)
 
-	// update menu
+	adminId := "admin1"
 
-	err = foodkartApp.UpdateRestaurantMenu(
-		"Restaurant1",
-		map[string]int{
-			"Pizza":  3,
-			"Burger": 5,
-		})
+	pandemicTracker.PandemicResult(adminId, name1, true, time.Now())
+	pandemicTracker.PandemicResult(adminId, name2, true, time.Now())
+	pandemicTracker.PandemicResult(adminId, name3, true, time.Now())
+
+	zone1Res, err := pandemicTracker.GetZone(adminId, 560056)
 	if err != nil {
-		fmt.Println(err)
-		return
+		fmt.Printf("error occurred %s\n", err.Error())
 	}
+	fmt.Printf("Pandemic result for zone %d is %s\n", 560056, zone1Res)
 
-	// place order
-	order, err := foodkartApp.PlaceOrder("rakeshdr", map[string]int{
-		"Pizza":  2,
-		"Burger": 3,
-	})
-
+	zone2Res, err := pandemicTracker.GetZone(adminId, 560055)
 	if err != nil {
-		fmt.Println(err)
-		return
+		fmt.Printf("error occurred %s\n", err.Error())
 	}
+	fmt.Printf("Pandemic result for zone %d is %s\n", 560055, zone2Res)
 
-	fmt.Println(order)
-
-	foodkartApp.PrintRestaurant()
-	foodkartApp.PrintOrder()
-
-	foodkartApp.MarkOrderAsDelivered(order.Id)
-
-	foodkartApp.PrintRestaurant()
-	foodkartApp.PrintOrder()
 }
